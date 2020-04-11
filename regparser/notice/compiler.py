@@ -18,21 +18,22 @@ logger = logging.getLogger(__name__)
 
 def get_parent_label(node):
     """ Given a node, get the label of it's parent. """
-    if node.node_type == Node.SUBPART:
-        return node.label[0]
-    elif node.node_type == Node.INTERP:
-        marker_position = node.label.index(Node.INTERP_MARK)
-        interpreting = node.label[:marker_position]
-        comment_pars = node.label[marker_position + 1:]
-        if comment_pars:                # 111-3-a-Interp-4-i
-            return '-'.join(node.label[:-1])
-        elif len(interpreting) > 1:     # 111-3-a-Interp
-            return '-'.join(interpreting[:-1] + [Node.INTERP_MARK])
-        else:                           # 111-Interp
+    if node:
+        if node.node_type == Node.SUBPART:
             return node.label[0]
-    else:
-        parent_label = node.label[:-1]
-        return '-'.join(parent_label)
+        elif node.node_type == Node.INTERP:
+            marker_position = node.label.index(Node.INTERP_MARK)
+            interpreting = node.label[:marker_position]
+            comment_pars = node.label[marker_position + 1:]
+            if comment_pars:                # 111-3-a-Interp-4-i
+                return '-'.join(node.label[:-1])
+            elif len(interpreting) > 1:     # 111-3-a-Interp
+                return '-'.join(interpreting[:-1] + [Node.INTERP_MARK])
+            else:                           # 111-Interp
+                return node.label[0]
+        else:
+            parent_label = node.label[:-1]
+            return '-'.join(parent_label)
 
 
 _component_re = re.compile('[a-z]+|[A-Z]+|[0-9]+')
@@ -226,11 +227,12 @@ class RegulationTree(object):
     def move(self, origin, destination):
         """ Move a node from one part in the tree to another. """
         origin = find(self.tree, origin)
-        self.delete_from_parent(origin)
+        if origin: # None type error if origin does not exist
+            self.delete_from_parent(origin)
 
-        origin = overwrite_marker(origin, destination[-1])
-        origin.label = destination
-        self.add_node(origin)
+            origin = overwrite_marker(origin, destination[-1])
+            origin.label = destination
+            self.add_node(origin)
 
     def replace_node_and_subtree(self, node):
         """ Replace an existing node in the tree with node. """
@@ -506,6 +508,7 @@ def compile_regulation(previous_tree, notice_changes):
                 next_pass.append((label, change))
             else:
                 one_change(reg, label, change)
+
 
     # Force any remaining changes -- generally means something went wrong
     for label, change in next_pass:

@@ -142,7 +142,14 @@ class NoticeXML(XMLWrapper):
         # that contain subagencies in children fields:
         for agency in agencies:
             agency["children"] = []
-        agency_map = {agency["id"]: agency for agency in agencies}
+#        agency_map = {agency["id"]: agency for agency in agencies}
+        agency_map = {}
+        for agency in agencies:
+            try:
+                agency_map[agency["id"]] = agency
+            except KeyError:  # the agency object has no id
+                continue
+
         child_keys = []
         for key in agency_map:
             agency = agency_map[key]

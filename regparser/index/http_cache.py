@@ -15,4 +15,6 @@ def http_client():
         if not os.path.isdir(parent_dir):
             os.makedirs(parent_dir)
 
-    return requests_cache.CachedSession(**config)
+    sess = requests_cache.CachedSession(**config)
+    sess.verify = False
+    return sess

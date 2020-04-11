@@ -1,4 +1,6 @@
 from regparser import plugins
+import os
+from regparser.web.settings.base import BASE_DIR
 
 META = {}
 
@@ -88,7 +90,7 @@ MACROS_SOURCES = [
 # provides. This setting specifies file paths to look through for local
 # versions of their XML. See also XML_REPO below, which is effectively tacked
 # on to the end of this list
-LOCAL_XML_PATHS = []
+LOCAL_XML_PATHS = [os.path.join(BASE_DIR, "CFR-2019-title-42")]
 
 
 # Sometimes appendices provide examples or model forms that include
