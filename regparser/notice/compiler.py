@@ -192,7 +192,11 @@ class RegulationTree(object):
             sort_order = sort_order[:-1]
             # Use bisect so the whole list isn't resorted (the original list
             # may not be strictly sorted)
-            insert_idx = bisect(sort_order, new_el_sort)
+            try:
+                insert_idx = bisect(sort_order, new_el_sort)
+            except TypeError:
+                logger.warn("Could not add child to tree: %s", node)
+                return children
             return children[:insert_idx] + [node] + children[insert_idx:-1]
 
     def delete_from_parent(self, node):

@@ -1,4 +1,6 @@
 from regparser import plugins
+import os
+from regparser.web.settings.base import BASE_DIR
 
 META = {}
 
@@ -90,7 +92,6 @@ MACROS_SOURCES = [
 # on to the end of this list
 LOCAL_XML_PATHS = []
 
-
 # Sometimes appendices provide examples or model forms that include
 # labels that we would otherwise recognize as structural to the appendix
 # text itself. This specifies those labels to ignore by regulation
@@ -102,9 +103,7 @@ XML_REPO_PREFIX = 'https://raw.githubusercontent.com/eregs/fr-notices/master/'
 
 # A dictionary of agency-specific external citations
 # @todo - move ATF citations to an extension
-CUSTOM_CITATIONS = {
-    "ATF I 5300.1": "https://atf-eregs.apps.cloud.gov/static/atf_eregs/5300_1.pdf",
-    "ATF I 5300.2": "https://www.atf.gov/file/58806/download"}
+CUSTOM_CITATIONS = {}
 
 # Regulations.gov settings. The demo key is rate limited by IP; sign up for
 # your own key at

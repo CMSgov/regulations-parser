@@ -12,12 +12,11 @@ from regparser.index.http_cache import http_client
 from regparser.tree.xml_parser.xml_wrapper import XMLWrapper
 from regparser.web.settings import parser as settings
 
-CFR_BULK_URL = ("https://www.gpo.gov/fdsys/bulkdata/CFR/{year}/title-{title}/"
+CFR_BULK_URL = ("https://www.govinfo.gov/bulkdata/CFR/{year}/title-{title}/"
                 "CFR-{year}-title{title}-vol{volume}.xml")
-CFR_PART_URL = ("https://www.gpo.gov/fdsys/pkg/"
+CFR_PART_URL = ("https://www.govinfo.gov/content/pkg/"
                 "CFR-{year}-title{title}-vol{volume}/xml/"
-                "CFR-{year}-title{title}-vol{volume}-part{part}.xml")
-
+                "CFR-{year}-title{title}-vol{volume}-part{part}.xml")            
 # Matches any of the following:
 #    Parts 200 to 219
 #    Parts 200 to end
