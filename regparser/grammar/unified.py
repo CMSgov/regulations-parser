@@ -99,6 +99,11 @@ marker_subpart_title = (
     SkipTo(LineEnd()).setResultsName("subpart_title")
 )
 
+marker_subparts_title = (
+    keep_pos(atomic.subparts_marker).setResultsName("marker") +
+    SkipTo(LineEnd()).setResultsName("subpart_title")
+)
+
 marker_comment = QuickSearchable(
     keep_pos(atomic.comment_marker).setResultsName("marker") +
     (section_comment | section_paragraph | ps_paragraph | mps_paragraph) +

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import string
 
-from regparser.grammar.unified import marker_subpart_title
+from regparser.grammar.unified import marker_subpart_title, marker_subparts_title
 from regparser.search import find_offsets, find_start, segments
 from regparser.tree import struct
 from regparser.tree.appendix.carving import find_appendix_start
@@ -32,10 +32,12 @@ def build_subpart(text, part):
             "", [], label, subpart_title, node_type=struct.Node.SUBPART)
 
     except ParseException:
-        logger.warn("Could not parse subpart from text: %s. Is this an empty or reserved subpart?", text)
         """ Return a dummy node, since this is likely a case where subparts are
         reserved for future use."""
-        label = [str(part), 'Subpart']
+        results = marker_subparts_title.parseString(text)
+        label = [str(part), 'Subpart', results[0]]
+        logger.warn("Could not parse subpart from text: {0}. Parsing as \
+        reserved subparts {1}".format(text, results[0]))
         return struct.Node(
             '', [], label, '', node_type=struct.Node.EMPTYPART)
 

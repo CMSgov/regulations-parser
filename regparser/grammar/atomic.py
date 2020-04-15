@@ -70,6 +70,7 @@ appendix = Regex(r"[A-Z]+[0-9]*\b").setResultsName("appendix")
 appendix_digit = Word(string.digits).setResultsName("appendix_digit")
 
 subpart = Word(string.ascii_uppercase).setResultsName("subpart")
+subparts = Word(string.ascii_uppercase).setResultsName("subparts")
 
 section_marker = Suppress(Regex(u"§|Section|section"))
 sections_marker = Suppress(Regex(u"§§|Sections|sections"))
@@ -84,6 +85,9 @@ part_marker = Marker("part")
 parts_marker = Marker("parts")
 
 subpart_marker = Marker("subpart")
+# usually happens when multiple empty subparts are reserved,
+# i.e. "Subparts E-G [Reserved]"
+subparts_marker = Marker("subparts")
 
 comment_marker = (
     (Marker("comment") |
