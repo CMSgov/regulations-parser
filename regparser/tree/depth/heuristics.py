@@ -44,8 +44,12 @@ def prefer_diff_types_diff_levels(solutions, weight=1.0):
 def prefer_shallow_depths(solutions, weight=0.1):
     """Dock solutions which have a higher maximum depth"""
     # Smallest maximum depth across solutions
-    min_max_depth = min(max(p.depth for p in s.assignment) for s in solutions)
-    max_max_depth = max(p.depth for s in solutions for p in s.assignment)
+    try:
+        min_max_depth = min(max(p.depth for p in s.assignment) for s in solutions)
+        max_max_depth = max(p.depth for s in solutions for p in s.assignment)
+    except ValueError:
+        min_max_depth = 0  #solutions array is empty
+        max_max_depth = 0
     variance = max_max_depth - min_max_depth
     if variance:
         result = []

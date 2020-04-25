@@ -6,6 +6,9 @@ from regparser.tree.depth import markers, rules
 from regparser.tree.depth.pair_rules import pair_rules
 from regparser.tree.struct import Node
 
+import logging
+logger = logging.getLogger(__name__)
+
 # A paragraph's type, index, depth assignment
 ParAssignment = namedtuple('ParAssignment', ('typ', 'idx', 'depth'))
 
@@ -85,7 +88,7 @@ def derive_depths(original_markers, additional_constraints=None):
         return []
     problem = Problem()
     marker_list = _compress_markerless(original_markers)
-
+    logger.warn(marker_list)
     # Depth in the tree, with an arbitrary limit of 10
     problem.addVariables(["depth" + str(i) for i in range(len(marker_list))],
                          range(10))
@@ -94,6 +97,7 @@ def derive_depths(original_markers, additional_constraints=None):
     problem.addConstraint(rules.must_be(0), ("depth0",))
 
     all_vars = []
+
     for idx, marker in enumerate(marker_list):
         type_var = "type{0}".format(idx)
         depth_var = "depth{0}".format(idx)
@@ -130,7 +134,6 @@ def derive_depths(original_markers, additional_constraints=None):
     # @todo: There's probably efficiency gains to making these rules over
     # prefixes (see above) rather than over the whole collection at once
     problem.addConstraint(rules.same_parent_same_type, all_vars)
-
     for constraint in additional_constraints:
         constraint(problem.addConstraint, all_vars)
 
@@ -138,6 +141,8 @@ def derive_depths(original_markers, additional_constraints=None):
     for assignment in problem.getSolutionIter():
         assignment = _decompress_markerless(assignment, original_markers)
         solutions.append(Solution(assignment))
+        if len(solutions) == 10:
+            break # to prevent infinite solution loops
     return solutions
 
 

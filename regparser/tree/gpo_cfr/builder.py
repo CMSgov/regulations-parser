@@ -67,7 +67,6 @@ def get_title(reg_doc):
 def preprocess_xml(xml):
     """This transforms the read XML through macros. Each macro consists of
     an xpath and a replacement xml string"""
-    logger.info("Preprocessing XML %s", xml)
     for path, replacement in content.Macros():
         replacement = etree.fromstring('<ROOT>' + replacement + '</ROOT>')
         for node in xml.xpath(path):
@@ -80,7 +79,6 @@ def preprocess_xml(xml):
 
 
 def build_tree(reg_xml):
-    logger.info("Build tree %s", reg_xml)
     preprocess_xml(reg_xml)
 
     reg_part = get_reg_part(reg_xml)

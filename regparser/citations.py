@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class Label(object):
     #   @TODO: subparts
-    _p_markers = tuple('p{0}'.format(i) for i in range(1, 10))
+    _p_markers = tuple('p{0}'.format(i) for i in range(1, 11))
 
     app_sect_schema = ('part', 'appendix', 'appendix_section') + _p_markers
     app_schema = ('part', 'appendix') + _p_markers

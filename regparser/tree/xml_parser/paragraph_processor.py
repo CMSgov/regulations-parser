@@ -61,7 +61,10 @@ class ParagraphProcessor(object):
         for fn, weight in self.DEPTH_HEURISTICS.items():
             depths = fn(depths, weight)
         depths = sorted(depths, key=lambda d: d.weight, reverse=True)
-        return depths[0]
+        if depths:
+            return depths[0]
+        else:
+            return depths
 
     def build_hierarchy(self, root, nodes, depths):
         """Given a root node, a flat list of child nodes, and a list of
@@ -90,11 +93,17 @@ class ParagraphProcessor(object):
             keyterm = KeyTerms.keyterm_in_node(node, ignore_definitions=False)
             if keyterm:
                 p_num = hash_for_paragraph(keyterm)
+                """Sometimes key terms will be repeated and the hash will be
+                identical. This is here to catch that case."""
+                if 'p{0}'.format(p_num) in [item[1].label[0] for item in stack.m_stack[-1]]:
+                    p_num = hash_for_paragraph(keyterm + "dedupe")
+
             else:
                 # len(n.label[-1]) < 6 filters out keyterm nodes
                 p_num = sum(n.is_markerless() and len(n.label[-1]) < 6
                             for n in stack.peek_level(depth)) + 1
             node.label[-1] = 'p{0}'.format(p_num)
+
 
     @staticmethod
     def separate_intro(nodes):
@@ -134,7 +143,7 @@ class ParagraphProcessor(object):
             markers = [node.label[0] for node in nodes]
             constraints = self.additional_constraints()
             depths = derive_depths(markers, constraints)
-
+            logger.info("Preprocessing %s - %s", root.label_id(), xml.text)
             if not depths:
                 logger.warning("Could not derive paragraph depths."
                                " Retrying with relaxed constraints.")

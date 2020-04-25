@@ -21,7 +21,9 @@ def marker_of(node):
     # another marker, ignoring whitespace
     regex = r'{0}(\s*-\s*{1})?'.format(regex_fmt.format(relevant[-1]),
                                        regex_fmt.format(_marker_re))
-    match = re.match(regex, text)
+    match = None
+    if text:
+        match = re.match(regex, text)
     if match:
         return text[:match.end()]
     else:
