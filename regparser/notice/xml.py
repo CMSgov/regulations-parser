@@ -345,6 +345,9 @@ class NoticeXML(XMLWrapper):
         except:             # noqa
             logger.error('Unable to fetch amendments for %s', self.version_id)
             return []
+        # if len(amendments) < 1:
+        #     raise Exception('Unable to fetch amendments for %s', self.version_id)
+
         return amendments
 
     @property
@@ -397,11 +400,14 @@ class NoticeXML(XMLWrapper):
     start_page = _root_property('fr-start-page', int)
     end_page = _root_property('fr-end-page', int)
 
-    def as_dict(self):
+    def as_dict(self, title=None):
         """We use JSON to represent notices in the API. This converts the
         relevant data into a dictionary to get one step closer. Unfortunately,
         that design assumes a single cfr_part"""
-        cfr_ref = self.cfr_refs[0]
+        cfr_ref = None
+        for ref in self.cfr_refs:
+            if ref.title == title:
+                cfr_ref = ref
         notice = {'amendments': self.amendments,
                   'cfr_parts': [str(part) for part in cfr_ref.parts],
                   'cfr_title': cfr_ref.title,
