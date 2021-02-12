@@ -89,8 +89,6 @@ setup(
             "atf-i-50031 = regparser.tree.xml_parser.preprocessors:atf_i50031",
             ("atf-import-categories = regparser.tree.xml_parser.preprocessors:"
              "ImportCategories"),
-            ("promote-nested-subjgrp = regparser.tree.xml_parser."
-             "preprocessors:promote_nested_subjgrp"),
             ("promote-nested-appendix = regparser.tree.xml_parser."
              "preprocessors:promote_nested_appendix"),
             ("move-subpart-into-contents = regparser.tree.xml_parser."
@@ -99,7 +97,6 @@ setup(
         "eregs_ns.parser.xml_matchers.gpo_cfr.PART": [
             "empty-part = regparser.tree.gpo_cfr.section:ParseEmptyPart",
             "subpart = regparser.tree.gpo_cfr.subpart:parse_subpart",
-            "subjgrp = regparser.tree.gpo_cfr.subpart:ParseSubjectGroup",
             "appendix = regparser.tree.gpo_cfr.appendices:parse_appendix",
         ]
     }

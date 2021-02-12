@@ -30,11 +30,14 @@ def build_subpart(cfr_part, xml):
     subpart_title = get_subpart_group_title(xml)
     subpart = reg_text.build_subpart(subpart_title, cfr_part)
 
-    sections = []
-    for ch in xml.xpath('./SECTION'):
-        sections.extend(build_from_section(cfr_part, ch))
+    children = []
+    for ch in xml.getChildren():
+        if ch.tag == 'SECTION':
+            children.extend(build_from_section(cfr_part, ch))
+        elif ch.tag == 'SUBJGRP': 
+            children.append(build_subjgrp(cfr_part, ch, []))
 
-    subpart.children = sections
+    subpart.children = children
     return subpart
 
 
