@@ -345,9 +345,6 @@ class NoticeXML(XMLWrapper):
         except:             # noqa
             logger.error('Unable to fetch amendments for %s', self.version_id)
             return []
-        # if len(amendments) < 1:
-        #     raise Exception('Unable to fetch amendments for %s', self.version_id)
-
         return amendments
 
     @property
