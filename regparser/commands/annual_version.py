@@ -43,6 +43,15 @@ def create_version_entry_if_needed(volume, cfr_part):
             Version(version_id, effective=volume.publication_date,
                     fr_citation=Citation(volume.vol_num, 1)))
 
+WORST_CASE_LAST_PUBLISHED_VERSION = 5
+
+def latest_annual_version(cfr_title, cfr_part, year):
+    vol = find_volume(year, cfr_title, cfr_part)
+    if vol is None:
+        if abs(year - date.today().year) > WORST_CASE_LAST_PUBLISHED_VERSION:
+            raise Exception("No annual version found for the last {0} years".format(abs(year - date.today().year)))
+        return latest_annual_version(cfr_title, cfr_part, year - 1)
+    return vol
 
 @click.command()
 @click.argument('cfr_title', type=int)
@@ -54,14 +63,7 @@ def annual_version(cfr_title, cfr_part, year):
     marked as effective on the date of the last annual edition (which is not
     likely accurate)"""
     cfr_year = year or date.today().year
-    vol = find_volume(cfr_year, cfr_title, cfr_part)
-    if vol is None and year is None:
-        logger.warning(
-            "No annual edition for %s CFR %s, Year: %s. Trying %s.",
-            cfr_title, cfr_part, cfr_year, cfr_year - 1)
-        cfr_year -= 1
-        vol = find_volume(cfr_year, cfr_title, cfr_part)
-
+    vol = latest_annual_version(cfr_title, cfr_part, cfr_year)
     if vol is None:
         logger.error("No annual edition for %s CFR %s, Year: %s",
                      cfr_title, cfr_part, cfr_year)
