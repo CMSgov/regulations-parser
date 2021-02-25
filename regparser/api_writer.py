@@ -48,6 +48,7 @@ class APIWriteContent:
         logger.debug("Writing %s", self.path)
         requests.post(
             self.path,
+            auth=(os.getenv("CORE_USER"), os.getenv("CORE_PASSWORD")),
             data=AmendmentNodeEncoder().encode(python_obj),
             headers={'content-type': 'application/json'})
 
