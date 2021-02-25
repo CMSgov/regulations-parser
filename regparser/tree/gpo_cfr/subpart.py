@@ -31,9 +31,12 @@ def build_subpart(cfr_part, xml):
     subpart = reg_text.build_subpart(subpart_title, cfr_part)
 
     children = []
-    for ch in xml.getChildren():
+    for ch in xml.getchildren():
         if ch.tag == 'SECTION':
-            children.extend(build_from_section(cfr_part, ch))
+            try:
+                children.extend(build_from_section(cfr_part, ch))
+            except TypeError:
+                continue
         elif ch.tag == 'SUBJGRP': 
             children.append(build_subjgrp(cfr_part, ch, []))
 

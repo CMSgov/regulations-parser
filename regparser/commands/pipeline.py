@@ -28,11 +28,13 @@ def pipeline(ctx, cfr_title, cfr_part, output, only_latest):
     * a directory prefixed with "git://". This will export to a git
       repository"""
     params = {'cfr_title': cfr_title, 'cfr_part': cfr_part}
-    if only_latest:
-        ctx.invoke(annual_version, **params)
-    else:
+    ctx.invoke(annual_version, **params)
+    if not only_latest:
         ctx.invoke(versions, **params)
-        ctx.invoke(annual_editions, **params)
+        try:
+            ctx.invoke(annual_editions, **params)
+        except click.UsageError:
+            pass
         ctx.invoke(fill_with_rules, **params)
     ctx.invoke(layers, **params)
     ctx.invoke(diffs, **params)

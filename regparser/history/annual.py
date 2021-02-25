@@ -116,6 +116,7 @@ class Volume(namedtuple('Volume', ['year', 'title', 'vol_num'])):
             response = client.get(url)
         if response.status_code == requests.codes.ok:
             return XMLWrapper(response.content, url)
+        raise Exception("failed to fetch annual edition from", url)
 
 
 def publication_month(cfr_title):

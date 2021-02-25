@@ -140,8 +140,7 @@ class RegulationTree(object):
             parent_label_id = get_parent_label(node)
             parent = find(self.tree, parent_label_id)
         if not parent:
-            logger.error("Could not find parent of %s. Misparsed amendment?",
-                         node.label_id())
+            raise Exception("Could not find parent of {}. Misparsed amendment?".format(node.label_id()))
         return parent
 
     def add_to_root(self, node):
@@ -511,7 +510,10 @@ def compile_regulation(previous_tree, notice_changes):
             if _needs_delay(reg, change):
                 next_pass.append((label, change))
             else:
-                one_change(reg, label, change)
+                try:
+                    one_change(reg, label, change)
+                except Exception:
+                    logger.warning("Failed to make change to %s", label)
 
 
     # Force any remaining changes -- generally means something went wrong

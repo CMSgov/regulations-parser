@@ -11,6 +11,7 @@ from six.moves import reduce
 
 from regparser.grammar import atomic, tokens, unified
 from regparser.grammar.utils import Marker, QuickSearchable, WordBoundaries
+from regparser.tree.depth.markers import emphasize
 from regparser.tree.paragraph import hash_for_paragraph, p_levels
 from regparser.tree.reg_text import subjgrp_label
 
@@ -327,8 +328,14 @@ def _through_sect(prev_lab, next_lab):
 def _through_paragraph(prev_lab, next_lab):
     """Expand "through" for labels ending in a paragraph."""
     depth = len(prev_lab)
-    start = p_levels[depth - 4].index(prev_lab[-1]) + 1
-    end = p_levels[depth - 4].index(next_lab[-1])
+    try:
+        start = p_levels[depth - 4].index(prev_lab[-1]) + 1
+    except Exception:
+        start = p_levels[depth - 4].index(emphasize(prev_lab[-1])) + 1
+    try:
+        end = p_levels[depth - 4].index(next_lab[-1])
+    except Exception:
+        end = p_levels[depth - 4].index(emphasize(next_lab[-1]))
     return [tokens.Paragraph.make(prev_lab[:depth - 1] +
                                   [p_levels[depth - 4][i]])
             for i in range(start, end)]
